@@ -1,0 +1,15 @@
+{
+  "name": "fluxity-propostas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test tests/*.test.js",
+    "test:e2e": "node scripts/verify.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "dependencies": { "playwright": "1.58.2" }
+}

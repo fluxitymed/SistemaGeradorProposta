@@ -1,0 +1,32 @@
+* { box-sizing: border-box; }
+@page { size: A4; margin: 0; }
+html, body { margin: 0; padding: 0; }
+body { color: #000; font: 11pt/1.16 Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.sheet { width: 210mm; height: 297mm; position: relative; background: var(--paper); break-after: page; }
+.sheet:last-child { break-after: auto; }
+header { position: absolute; top: 15mm; left: 16.5mm; right: 16mm; height: 28mm; display: flex; align-items: center; justify-content: space-between; }
+header > span { font: 24pt Arial, sans-serif; color: #a6a6a6; }
+.brand-symbol { width: 23mm; height: 27mm; position: relative; overflow: hidden; }
+.brand-symbol img { position: absolute; width: 115mm; max-width: none; left: -47.8mm; top: -45.5mm; }
+.content { position: absolute; top: 58mm; left: 12.5mm; width: 165.5mm; height: 218mm; display: flow-root; }
+section { margin: 0 0 6mm; display: flow-root; break-inside: avoid; }
+h2 { font: 700 12pt/1.4 Poppins, Arial, sans-serif; color: var(--heading); margin: 0 0 3mm; padding-bottom: 2.5mm; border-bottom: 0.2mm solid #dedede; break-after: avoid; }
+p { margin: 0 0 4mm; overflow-wrap: anywhere; widows: 3; orphans: 3; }
+p:last-child { margin-bottom: 0; }
+.client-name { font: 700 10pt/1.5 Poppins, Arial, sans-serif; color: var(--accent); margin-bottom: 4mm; }
+.reference, .representative { font-family: Poppins, Arial, sans-serif; font-size: 10pt; }
+.representative { line-height: 1.2; }
+ul { margin: 0; padding-left: 7mm; }
+li { padding-left: 0; overflow-wrap: anywhere; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; font-size: 10pt; break-inside: avoid; margin-bottom: 7mm; }
+th, td { border: 0.3mm solid #555; padding: 1mm; overflow-wrap: anywhere; }
+th { background: #a6a6a6; font-weight: 400; text-align: center; }
+th:last-child { width: 34mm; }
+.price { text-align: center; white-space: nowrap; }
+.observations, .payment-terms { white-space: pre-wrap; }
+footer { position: absolute; bottom: 10mm; left: 16.5mm; right: 30mm; display: flex; justify-content: space-between; align-items: center; color: #231f20; font: 700 10pt Poppins, Arial, sans-serif; }
+footer img { width: 18mm; height: auto; }
+#source { position: absolute; left: -20000px; width: 165.5mm; }
+.service-group { font-size: 10pt; line-height: 1.2; margin-bottom: 4mm; break-inside: avoid; }
+.service-group:last-child { margin-bottom: 0; }
+.service-group h3 { font: 700 10pt/1.4 Poppins, Arial, sans-serif; margin: 0 0 1mm; break-after: avoid; }

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nova proposta · Fluxity</title>
+  <link rel="stylesheet" href="/app.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Ir para o conteúdo</a>
+  <header class="topbar"><div class="topbar-inner"><img src="/assets/fluxity-footer.png" alt="Fluxity" width="108" height="36"><span class="divider"></span><span>Propostas comerciais</span><span class="workspace-tag">ESPAÇO COMERCIAL</span></div></header>
+  <main id="main">
+    <div class="intro"><p class="eyebrow">PROPOSTAS / NOVA PROPOSTA</p><h1>Nova proposta</h1><p>Personalize os dados, confira a proposta e baixe o PDF.</p></div>
+    <div class="workspace">
+      <section class="card form-card" aria-labelledby="form-title">
+        <div class="card-heading"><span class="step">01</span><div><h2 id="form-title">Dados da proposta</h2><p>Todos os campos são obrigatórios.</p></div></div>
+        <form id="proposal-form" novalidate>
+          <div class="field"><label for="productId">Produto</label><select id="productId" name="productId" required aria-describedby="productId-error" disabled><option value="">Carregando produtos…</option></select><p class="field-error" id="productId-error"></p></div>
+          <div class="field"><label for="clientName">Nome do cliente</label><input id="clientName" name="clientName" placeholder="Ex.: Dra. Daniela" maxlength="300" autocomplete="name" required aria-describedby="clientName-error"><p class="field-error" id="clientName-error"></p></div>
+          <div class="field"><label for="price">Valor do produto</label><input id="price" name="price" inputmode="decimal" placeholder="R$ 0,00" maxlength="24" required aria-describedby="price-hint price-error"><p class="field-hint" id="price-hint">Informe o valor em reais.</p><p class="field-error" id="price-error"></p></div>
+          <div class="field"><label for="paymentTerms">Condição de pagamento</label><textarea id="paymentTerms" name="paymentTerms" rows="5" maxlength="4000" placeholder="Ex.: Pagamento antecipado, no momento de início dos serviços." required aria-describedby="paymentTerms-hint paymentTerms-error"></textarea><p class="field-hint" id="paymentTerms-hint">Descreva livremente a forma e o prazo de pagamento.</p><p class="field-error" id="paymentTerms-error"></p></div>
+          <button id="preview-button" class="button primary" type="submit" disabled><span aria-hidden="true">↗</span> <span id="preview-label">Visualizar proposta</span></button>
+          <p id="form-status" class="status" role="status" aria-live="polite"></p>
+          <p id="global-error" class="global-error" role="alert" hidden></p>
+          <button id="retry-products" class="button secondary" type="button" hidden>Tentar carregar produtos novamente</button>
+        </form>
+        <div class="form-note"><span aria-hidden="true">ⓘ</span><p>Confira os dados antes de baixar. Ao editar um campo, gere uma nova visualização.</p></div>
+      </section>
+      <section class="card preview-card" aria-labelledby="preview-title" aria-busy="false">
+        <div class="preview-heading"><div><p class="eyebrow">02 / CONFERÊNCIA</p><h2 id="preview-title">Pré-visualização</h2></div><div class="preview-tools"><button id="zoom-button" class="zoom-button" type="button" aria-pressed="false" hidden>Ampliar</button><span class="paper-tag">PDF · A4</span></div></div>
+        <div id="empty-preview" class="empty-preview"><div class="document-icon" aria-hidden="true"><span></span><span></span><span></span></div><h3>Sua proposta começa aqui</h3><p>Preencha os dados ao lado e clique em<br>“Visualizar proposta” para conferir o documento.</p></div>
+        <div id="preview-scroll" class="preview-scroll" hidden><div id="preview-stage"><iframe id="proposal-preview" title="Proposta comercial preenchida" sandbox="allow-same-origin"></iframe></div></div>
+        <div class="download-bar"><p id="preview-info">A proposta aparecerá neste espaço.</p><button id="download-button" class="button secondary" type="button" disabled><span aria-hidden="true">↓</span> Baixar PDF</button></div>
+      </section>
+    </div>
+    <footer class="app-footer"><span>Fluxity · Propostas comerciais</span><span>Do primeiro contato ao próximo passo.</span></footer>
+  </main>
+</body>
+</html>

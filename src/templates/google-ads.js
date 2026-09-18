@@ -1,0 +1,55 @@
+// Transcrição de “Proposta Google Ads - Dra. Daniela.pdf”.
+// Somente as três correções editoriais autorizadas foram aplicadas.
+import { fluxity } from '../config/fluxity.js';
+
+export const googleAds = {
+  id: 'google-ads',
+  name: 'Gestão de Google Ads',
+  filenameLabel: 'Google-Ads',
+  category: 'Marketing digital',
+  reference: 'Gerenciamento do Google Ads',
+  variableFields: ['clientName', 'price', 'paymentTerms'],
+  includedServices: [
+    'Criação e manutenção de campanhas do Google Ads;',
+    'Otimização constante das campanhas;',
+    // PENDENTE: frase incompleta no original. Não inventar continuação.
+    'Definição de estratégias, objetivos e palavras-chaves junto ao cliente para',
+    'Planilha para o cliente preencher os contatos e resultados.',
+    'Configuração de métricas no Google Analytics e Google Tag Manager;',
+    'Relatórios mensais com os resultados da campanha;',
+  ],
+  supplyLimits: [
+    'Não está incluso a verba da campanha;',
+    'O cliente deverá aprovar a campanha e a metodologia utilizada;',
+    'A campanha pode ser pausada a qualquer momento a pedido do cliente, a Fluxity só habilitará novamente a campanha após a confirmação da autorização do cliente;',
+    'Caso a verba de campanha encerre, automaticamente a campanha é pausada até que o cliente faça uma nova recarga;',
+    'O pagamento da verba de campanha é feito do cliente diretamente para o Google, a Fluxity não pode agir como intermediadora desse pagamento;',
+    'A gestão de campanha é vinculada a um único site. Não é permitida sua aplicação ou replicação em outros sites ou domínios associados.',
+    'Não se responsabiliza por resultados financeiros, número de conversões, o quanto fica no topo do Google e entre outros pontos, uma vez que o desempenho da campanha depende de fatores externos, como mercado, concorrência e comportamento do consumidor, atendimento do cliente e entre outros fatores que a Fluxity não tem controle.',
+    'O valor apresentado nesta proposta é válido para investimentos de até R$ 7.000,00 mensais. Caso o cliente opte por realizar um investimento superior a esse limite, será cobrado 15% sobre o valor excedente.',
+  ],
+  // PENDENTE: significado de “30 dias” ambíguo; texto original preservado.
+  serviceStart: '30 dias, após a configuração inicial e em observância de todos os itens do tópico “limites de fornecimento”.',
+  investmentDescription: 'Elaboração, configuração e acompanhamento de campanhas no Google Ads',
+  observations: [
+    'A verba da campanha no Google Ads não está inclusa no valor da mensalidade.',
+    'O pagamento da verba é feito diretamente pelo cliente à plataforma Google Ads.',
+  ],
+  latePaymentRule: 'Atrasos no pagamento implicarão no congelamento do serviço.',
+  company: fluxity,
+  labels: {
+    document: 'PROPOSTA', reference: 'REFERÊNCIA', representative: 'Representante da Fluxity',
+    includedServices: 'Serviços contratados inclusos', supplyLimits: 'Limites de fornecimento',
+    serviceStart: 'Início de serviço', investment: 'Investimento', description: 'DESCRIÇÃO',
+    price: 'MENSALIDADE', observations: 'Observações importantes:', paymentTerms: 'Condições de pagamento',
+  },
+  visual: {
+    accent: '#002060', heading: '#767171', paper: '#f8f8f8',
+    headerAsset: 'fluxity-header.png', footerAsset: 'fluxity-footer.png',
+    breakBefore: ['serviceStart'],
+  },
+  reviewNotes: [
+    'Definição de estratégias, objetivos e palavras-chaves junto ao cliente para: frase incompleta no original.',
+    'Início de serviço: significado de “30 dias” precisa ser esclarecido.',
+  ],
+};
