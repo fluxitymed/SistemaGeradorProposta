@@ -1,10 +1,14 @@
 import { chromium } from 'playwright';
 import { renderDocument, paginateDocument, safeFilename } from './document.js';
 
+// Deve corresponder ao caminho usado pelo postinstall para localizar o
+// Chromium empacotado no projeto também durante a execução no Render.
+process.env.PLAYWRIGHT_BROWSERS_PATH ??= '0';
+
 export async function launchBrowser() {
   const options = { headless: true, timeout: 30000 };
   if (process.env.PDF_BROWSER_PATH) return chromium.launch({ ...options, executablePath: process.env.PDF_BROWSER_PATH });
-  for (const channel of ['chrome', 'msedge', undefined]) {
+  for (const channel of [undefined, 'chrome', 'msedge']) {
     try { return await chromium.launch({ ...options, ...(channel ? { channel } : {}) }); }
     catch { /* Tenta o próximo navegador local ou o Chromium do Playwright. */ }
   }
