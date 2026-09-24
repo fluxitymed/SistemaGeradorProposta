@@ -9,7 +9,7 @@ export async function verifyAcquisition({ page, artifacts, record }) {
   const client = 'Dr. Leonardo Carvalho - Clínica Carvalho';
   await page.unroute('**/api/proposals');
   await page.setViewportSize({ width: 1440, height: 1100 });
-  assert.deepEqual(await page.locator('#productId option').evaluateAll(options => options.filter(el => el.value).map(el => el.textContent)), ['Gestão de Google Ads', template.name]);
+  assert.deepEqual(await page.locator('#productId option').evaluateAll(options => options.filter(el => el.value).map(el => el.textContent)), ['Gestão de Google Ads', template.name, 'Gestão de Meta Ads']);
   await page.locator('#productId').selectOption(template.id);
   assert.equal(await page.locator('#download-button').isDisabled(), true);
   await page.locator('#clientName').fill(client);

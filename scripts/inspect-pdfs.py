@@ -79,5 +79,23 @@ for pdf in sorted(artifacts.glob('*.pdf')):
         for line in data['multiline' if long_case else 'terms'].splitlines():
             assert normalize(line) in normalize(text), line
         reports[-1]['newProductContentPreserved'] = True
+    if pdf.name.startswith('Proposta-Meta-Ads-'):
+        data = json.loads((artifacts / 'meta-ads-expected.json').read_text(encoding='utf-8'))
+        template = data['template']
+        for group in template['serviceGroups']:
+            assert normalize(group['title']) in normalize(text)
+            for item in group['items']:
+                assert normalize(item) in normalize(text), item
+        for item in template['supplyLimits'] + template['observations'] + [template['serviceStart'], template['investmentDescription']]:
+            assert normalize(item) in normalize(text), item
+        assert 'R$ 1.500,00' in text.replace('\u00a0', ' ')
+        for forbidden in ['palavras-chave', 'Facebook Ads', 'Meta ADS', 'produção de vídeos', 'sessões de fotos', 'gestão de redes sociais', 'atendimento dos leads', '15% sobre', 'congelamento']:
+            assert forbidden not in text, forbidden
+        assert '(71) 99739 8412' in text
+        long_case = pdf.stem.endswith('Nome-Longo')
+        assert normalize(data['longClient' if long_case else 'client']) in normalize(text)
+        for line in data['multiline' if long_case else 'terms'].splitlines():
+            assert normalize(line) in normalize(text), line
+        reports[-1]['metaAdsContentPreserved'] = True
 (artifacts / 'pdf-inspection.json').write_text(json.dumps(reports, ensure_ascii=False, indent=2), encoding='utf-8')
 print(json.dumps(reports, ensure_ascii=False, indent=2))

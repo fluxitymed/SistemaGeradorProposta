@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createApp } from '../src/server.js';
 import { launchBrowser } from '../src/pdf.js';
 import { verifyAcquisition } from './verify-acquisition.mjs';
+import { verifyMetaAds } from './verify-meta-ads.mjs';
 
 const artifacts = new URL('../artifacts/validation/', import.meta.url);
 await mkdir(artifacts, { recursive: true });
@@ -102,7 +103,8 @@ try {
   assert.equal(await page.locator('#download-button').isDisabled(), true);
   record('Estado de carregamento e resposta obsoleta descartada após editar durante a geração.');
   const acquisition = await verifyAcquisition({ page, artifacts, record });
+  const metaAds = await verifyMetaAds({ page, artifacts, record });
   assert.deepEqual(pageErrors, []);
   record('Nenhum erro JavaScript no navegador.');
-  await writeFile(new URL('results.json', artifacts), JSON.stringify({ checks, generatedPages: generated.pageCount, longNamePages: long.pageCount, extensiveTextPages: edge.pageCount, acquisition }, null, 2));
+  await writeFile(new URL('results.json', artifacts), JSON.stringify({ checks, generatedPages: generated.pageCount, longNamePages: long.pageCount, extensiveTextPages: edge.pageCount, acquisition, metaAds }, null, 2));
 } finally { await browser?.close(); await app.close(); }

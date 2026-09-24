@@ -120,6 +120,12 @@ PDF de validação: `artifacts/validation/Proposta-Gestao-Aquisicao-Comercial-Dr
 
 Nenhuma nova pendência comercial foi identificada. As duas pendências editoriais do template anterior continuam preservadas exclusivamente em Google Ads.
 
+## Terceiro produto: Gestão de Meta Ads
+
+O produto `meta-ads` está cadastrado em `src/templates/meta-ads.js` e reutiliza o mesmo formulário, gerador, paginação e identificação institucional. Somente nome do cliente, valor e condição de pagamento variam. O pagamento aceita múltiplas linhas e não há vencimento, parcelas, duração, desconto ou forma de pagamento fixos no template.
+
+O teste E2E gera `artifacts/validation/Proposta-Meta-Ads-Clinica-Fluxity-Saude.pdf` com o valor de R$ 1.500,00 e duas linhas de condição de pagamento, além de um cenário de nome com 300 caracteres e 35 linhas de pagamento. A inspeção renderiza todas as páginas e confirma A4, texto selecionável, limites da página e conteúdo comercial.
+
 Validação desta entrega: `npm run check`, os 10 testes de `npm test` e o fluxo completo de `npm run test:e2e` passaram. Os dois PDFs do novo produto têm três páginas cada; todas as seis páginas foram renderizadas e examinadas visualmente, sem cortes, sobreposições ou textos ilegíveis. A proposta padrão de Google Ads permaneceu com duas páginas, texto idêntico e pixels idênticos ao PDF anterior. Os resultados detalhados estão em `artifacts/validation/results.json` e `artifacts/validation/pdf-inspection.json`.
 
 ## Verificações
