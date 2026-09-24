@@ -25,7 +25,7 @@ Após cadastrar ou alterar um template, reinicie o servidor e atualize a página
 O gerador tenta Chrome, Edge e, por último, o Chromium do Playwright. Caso não tenha um navegador instalado:
 
 ```powershell
-npx playwright install chromium
+npm install
 ```
 
 Também é possível definir `PDF_BROWSER_PATH` com o caminho de um executável Chromium. `PORT` altera a porta. O servidor escuta somente em `127.0.0.1`; esta versão é de uso local, sem autenticação, banco de dados ou armazenamento de propostas. Os dados e o PDF ficam em memória durante a geração e no navegador até editar/recarregar a tela. A aplicação funciona sem internet depois de instalar as dependências e o navegador.

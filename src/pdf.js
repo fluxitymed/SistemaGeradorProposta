@@ -8,7 +8,7 @@ export async function launchBrowser() {
     try { return await chromium.launch({ ...options, ...(channel ? { channel } : {}) }); }
     catch { /* Tenta o próximo navegador local ou o Chromium do Playwright. */ }
   }
-  throw new Error('Instale o Google Chrome ou execute npx playwright install chromium.');
+  throw new Error('O Chromium necessário para gerar PDFs não está disponível. Execute a instalação de dependências do projeto novamente para instalá-lo.');
 }
 
 export function createPdfGenerator() {
