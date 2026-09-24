@@ -23,6 +23,20 @@ export function isAllowedLocalOrigin(origin) {
   } catch { return false; }
 }
 
+// Em produção, o Render entrega a interface e a API no mesmo domínio HTTPS.
+// Aceitar somente a origem que corresponde ao Host da própria requisição evita
+// bloquear o POST legítimo sem liberar chamadas de outros domínios.
+export function isAllowedRequestOrigin(origin, requestHost) {
+  if (!origin || isAllowedLocalOrigin(origin)) return true;
+  try {
+    const url = new URL(origin);
+    return (url.protocol === 'http:' || url.protocol === 'https:')
+      && !url.username && !url.password
+      && Boolean(requestHost)
+      && url.host.toLowerCase() === requestHost.toLowerCase();
+  } catch { return false; }
+}
+
 export function createApp({ generator = createPdfGenerator() } = {}) {
   const server = http.createServer(async (req, res) => {
     res.setHeader('Content-Security-Policy', csp);
@@ -34,7 +48,7 @@ export function createApp({ generator = createPdfGenerator() } = {}) {
       const url = new URL(req.url, 'http://localhost');
       if (req.method === 'GET' && url.pathname === '/api/products') return json(200, productOptions());
       if (req.method === 'POST' && url.pathname === '/api/proposals') {
-        if (!isAllowedLocalOrigin(req.headers.origin) || (!req.headers.origin && req.headers['sec-fetch-site'] === 'cross-site')) return json(403, { message: 'Origem da solicitação não permitida.' });
+        if (!isAllowedRequestOrigin(req.headers.origin, req.headers.host) || (!req.headers.origin && req.headers['sec-fetch-site'] === 'cross-site')) return json(403, { message: 'Origem da solicitação não permitida.' });
         if (!req.headers['content-type']?.startsWith('application/json')) return json(415, { message: 'Envie os dados em JSON.' });
         const chunks = []; let size = 0;
         for await (const chunk of req) {

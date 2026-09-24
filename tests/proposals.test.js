@@ -4,7 +4,7 @@ import { validateProposal, parsePrice, formatPrice } from '../public/validation.
 import { safeFilename, renderDocument } from '../src/document.js';
 import { googleAds } from '../src/templates/google-ads.js';
 import { productOptions } from '../src/templates/index.js';
-import { createApp, isAllowedLocalOrigin } from '../src/server.js';
+import { createApp, isAllowedLocalOrigin, isAllowedRequestOrigin } from '../src/server.js';
 
 const input = { productId: 'google-ads', clientName: 'Dra. Daniela', price: 'R$ 1.000,00', paymentTerms: 'Pagamento antecipado, no momento de início dos serviços.' };
 test('converte BRL em centavos sem aceitar formatos ambíguos', () => {
@@ -68,4 +68,10 @@ test('API valida antes de gerar, trata falhas e bloqueia acessos indevidos', asy
 test('aceita somente origens loopback para a interface local', () => {
   for (const origin of ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://[::1]:3000']) assert.equal(isAllowedLocalOrigin(origin), true);
   for (const origin of ['https://localhost:3000', 'http://example.com', 'http://localhost.evil.example', 'null', 'http://user@localhost:3000']) assert.equal(isAllowedLocalOrigin(origin), false);
+});
+test('aceita a origem HTTPS do mesmo domínio em produção e bloqueia domínios diferentes', () => {
+  assert.equal(isAllowedRequestOrigin('https://sistemageradorproposta.onrender.com', 'sistemageradorproposta.onrender.com'), true);
+  assert.equal(isAllowedRequestOrigin('https://sistemageradorproposta.onrender.com', 'outro-servico.onrender.com'), false);
+  assert.equal(isAllowedRequestOrigin('https://malicioso.example', 'sistemageradorproposta.onrender.com'), false);
+  assert.equal(isAllowedRequestOrigin('null', 'sistemageradorproposta.onrender.com'), false);
 });
