@@ -7,7 +7,7 @@ import { listenAvailable } from '../src/startup.js';
 
 test('porta ocupada: CLI inicia em outra porta e mantém o serviço existente', { timeout: 15000 }, async t => {
   const existing = http.createServer((req, res) => res.end('serviço existente'));
-  const occupied = await listenAvailable(existing, 0);
+  const occupied = await listenAvailable(existing, 0, '0.0.0.0');
   t.after(() => new Promise(resolve => existing.close(resolve)));
   const child = spawn(process.execPath, ['src/server.js'], {
     cwd: new URL('../', import.meta.url),
@@ -23,8 +23,8 @@ test('porta ocupada: CLI inicia em outra porta e mantém o serviço existente', 
     child.on('exit', code => reject(new Error(`Servidor encerrou com código ${code}: ${stderr}`)));
     child.stdout.on('data', chunk => {
       output += chunk;
-      const match = output.match(/http:\/\/localhost:(\d+)\/nova-proposta/);
-      if (match) resolve(new URL(match[0]));
+      const match = output.match(/servidor escutando em 0\.0\.0\.0:(\d+)/);
+      if (match) resolve(new URL(`http://localhost:${match[1]}/nova-proposta`));
     });
   });
   assert.notEqual(Number(url.port), occupied);
@@ -40,4 +40,12 @@ test('configuração de porta inválida é rejeitada com mensagem clara', async 
     await assert.rejects(listenAvailable(server, port), /PORT deve ser um número inteiro/);
     assert.equal(server.listening, false);
   }
+});
+
+test('servidor pode escutar em todas as interfaces para produção', async t => {
+  const server = http.createServer();
+  const port = await listenAvailable(server, 0, '0.0.0.0');
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  assert.equal(server.address().address, '0.0.0.0');
+  assert.ok(port > 0);
 });

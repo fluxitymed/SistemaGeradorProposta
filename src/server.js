@@ -71,10 +71,11 @@ export function createApp({ generator = createPdfGenerator() } = {}) {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const app = createApp();
   try {
-    const preferredPort = Number(process.env.PORT || 3000);
-    const port = await listenAvailable(app.server, preferredPort, '127.0.0.1');
-    if (preferredPort !== 0 && port !== preferredPort) console.log(`A porta ${preferredPort} está ocupada. O sistema foi iniciado na porta ${port}.`);
-    console.log(`Fluxity — Nova proposta: http://localhost:${port}/nova-proposta`);
+    const preferredPort = Number(process.env.PORT) || 10000;
+    const port = await listenAvailable(app.server, preferredPort, '0.0.0.0');
+    if (port !== preferredPort) console.log(`A porta ${preferredPort} está ocupada. O sistema foi iniciado na porta ${port}.`);
+    console.log(`Fluxity — servidor escutando em 0.0.0.0:${port}.`);
+    console.log(`Acesse localmente: http://localhost:${port}/nova-proposta`);
     console.log('Para encerrar o sistema neste terminal, pressione Ctrl+C.');
     for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, async () => { await app.close(); process.exit(0); });
   } catch (error) {
