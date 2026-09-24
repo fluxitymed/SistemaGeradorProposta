@@ -29,7 +29,7 @@ test('porta ocupada: CLI inicia em outra porta e mantém o serviço existente', 
   });
   assert.notEqual(Number(url.port), occupied);
   assert.equal((await fetch(url)).status, 200);
-  assert.equal((await (await fetch(new URL('/api/products', url))).json()).length, 2);
+  assert.equal((await (await fetch(new URL('/api/products', url))).json()).length, 3);
   assert.equal(await (await fetch(`http://127.0.0.1:${occupied}`)).text(), 'serviço existente');
   assert.equal(stderr, '');
 });

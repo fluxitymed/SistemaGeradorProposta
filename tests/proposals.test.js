@@ -4,7 +4,7 @@ import { validateProposal, parsePrice, formatPrice } from '../public/validation.
 import { safeFilename, renderDocument } from '../src/document.js';
 import { googleAds } from '../src/templates/google-ads.js';
 import { productOptions } from '../src/templates/index.js';
-import { createApp } from '../src/server.js';
+import { createApp, isAllowedLocalOrigin } from '../src/server.js';
 
 const input = { productId: 'google-ads', clientName: 'Dra. Daniela', price: 'R$ 1.000,00', paymentTerms: 'Pagamento antecipado, no momento de início dos serviços.' };
 test('converte BRL em centavos sem aceitar formatos ambíguos', () => {
@@ -54,13 +54,18 @@ test('API valida antes de gerar, trata falhas e bloqueia acessos indevidos', asy
   assert.equal((await post('no json')).status, 400);
   assert.equal((await post('null')).status, 422);
   assert.equal((await post(JSON.stringify(input), { Origin: 'https://example.com' })).status, 403);
+  assert.equal((await post(JSON.stringify(input), { Origin: `http://localhost:${app.server.address().port}`, 'Sec-Fetch-Site': 'cross-site' })).status, 500);
   assert.equal((await post(JSON.stringify(input), { 'Content-Type': 'text/plain' })).status, 415);
   assert.equal((await post(JSON.stringify({ ...input, paymentTerms: 'a'.repeat(40000) }))).status, 413);
-  assert.equal(called, 0);
+  assert.equal(called, 1);
   const failed = await post(JSON.stringify(input));
   assert.equal(failed.status, 500);
   assert.match((await failed.json()).message, /Não foi possível gerar o PDF/);
-  assert.equal(called, 1);
+  assert.equal(called, 2);
   assert.equal((await fetch(base + '/src/templates/google-ads.js')).status, 404);
   assert.equal((await fetch(base + '/%2e%2e%2fpackage.json')).status, 404);
+});
+test('aceita somente origens loopback para a interface local', () => {
+  for (const origin of ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://[::1]:3000']) assert.equal(isAllowedLocalOrigin(origin), true);
+  for (const origin of ['https://localhost:3000', 'http://example.com', 'http://localhost.evil.example', 'null', 'http://user@localhost:3000']) assert.equal(isAllowedLocalOrigin(origin), false);
 });

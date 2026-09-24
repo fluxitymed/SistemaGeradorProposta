@@ -1,6 +1,6 @@
 // Tenta a porta preferida e as seguintes sem encerrar outros processos.
 // Se todas estiverem ocupadas, o sistema operacional escolhe uma porta livre.
-export async function listenAvailable(server, preferredPort = 3000) {
+export async function listenAvailable(server, preferredPort = 3000, host = '127.0.0.1') {
   if (!Number.isInteger(preferredPort) || preferredPort < 0 || preferredPort > 65535) {
     throw new Error('PORT deve ser um número inteiro entre 0 e 65535.');
   }
@@ -19,7 +19,7 @@ export async function listenAvailable(server, preferredPort = 3000) {
         const onListening = () => { cleanup(); resolve(); };
         server.once('error', onError);
         server.once('listening', onListening);
-        try { server.listen(port, '0.0.0',resolve); }
+        try { server.listen(port, host, resolve); }
         catch (error) { cleanup(); reject(error); }
       });
       return server.address().port;

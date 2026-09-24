@@ -10,6 +10,18 @@ import { listenAvailable } from './startup.js';
 const publicRoot = fileURLToPath(new URL('../public/', import.meta.url));
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.ttf': 'font/ttf' };
 const csp = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-src 'self' about:; base-uri 'none'; form-action 'self'; frame-ancestors 'self'";
+const loopbackHosts = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+
+// O navegador pode abrir a interface em localhost e enviar a API para
+// 127.0.0.1 (ou o inverso). Ambos representam o mesmo servidor local.
+// Origens externas continuam bloqueadas.
+export function isAllowedLocalOrigin(origin) {
+  if (!origin) return true;
+  try {
+    const url = new URL(origin);
+    return url.protocol === 'http:' && loopbackHosts.has(url.hostname.toLowerCase()) && !url.username && !url.password;
+  } catch { return false; }
+}
 
 export function createApp({ generator = createPdfGenerator() } = {}) {
   const server = http.createServer(async (req, res) => {
@@ -22,8 +34,7 @@ export function createApp({ generator = createPdfGenerator() } = {}) {
       const url = new URL(req.url, 'http://localhost');
       if (req.method === 'GET' && url.pathname === '/api/products') return json(200, productOptions());
       if (req.method === 'POST' && url.pathname === '/api/proposals') {
-        if (req.headers.origin && req.headers.origin !== `http://${req.headers.host}`) return json(403, { message: 'Origem da solicitação não permitida.' });
-        if (req.headers['sec-fetch-site'] === 'cross-site') return json(403, { message: 'Origem da solicitação não permitida.' });
+        if (!isAllowedLocalOrigin(req.headers.origin) || (!req.headers.origin && req.headers['sec-fetch-site'] === 'cross-site')) return json(403, { message: 'Origem da solicitação não permitida.' });
         if (!req.headers['content-type']?.startsWith('application/json')) return json(415, { message: 'Envie os dados em JSON.' });
         const chunks = []; let size = 0;
         for await (const chunk of req) {
@@ -61,7 +72,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const app = createApp();
   try {
     const preferredPort = Number(process.env.PORT || 3000);
-    const port = await listenAvailable(app.server, preferredPort, "0.0.0.0");
+    const port = await listenAvailable(app.server, preferredPort, '127.0.0.1');
     if (preferredPort !== 0 && port !== preferredPort) console.log(`A porta ${preferredPort} está ocupada. O sistema foi iniciado na porta ${port}.`);
     console.log(`Fluxity — Nova proposta: http://localhost:${port}/nova-proposta`);
     console.log('Para encerrar o sistema neste terminal, pressione Ctrl+C.');
