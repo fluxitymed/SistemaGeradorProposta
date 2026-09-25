@@ -14,9 +14,8 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 ENV NODE_ENV=production
 
 # The preinstalled browser is readable by pwuser; run the application as that
-# unprivileged account and prove PDF generation works during the image build.
+# unprivileged account. PDF generation is initialized on the first request.
 USER pwuser
-RUN npm run test:docker
 
 EXPOSE 10000
 
