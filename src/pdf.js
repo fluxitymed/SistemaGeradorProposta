@@ -1,18 +1,24 @@
 import { chromium } from 'playwright';
+import playwrightPackage from 'playwright/package.json' with { type: 'json' };
 import { renderDocument, paginateDocument, safeFilename } from './document.js';
 
-// Deve corresponder ao caminho usado pelo postinstall para localizar o
-// Chromium empacotado no projeto também durante a execução no Render.
-process.env.PLAYWRIGHT_BROWSERS_PATH ??= '0';
+export const playwrightVersion = playwrightPackage.version;
+
+export function browserRuntime() {
+  return {
+    playwrightVersion,
+    executablePath: chromium.executablePath(),
+  };
+}
 
 export async function launchBrowser() {
-  const options = { headless: true, timeout: 30000 };
-  if (process.env.PDF_BROWSER_PATH) return chromium.launch({ ...options, executablePath: process.env.PDF_BROWSER_PATH });
-  for (const channel of [undefined, 'chrome', 'msedge']) {
-    try { return await chromium.launch({ ...options, ...(channel ? { channel } : {}) }); }
-    catch { /* Tenta o próximo navegador local ou o Chromium do Playwright. */ }
-  }
-  throw new Error('O Chromium necessário para gerar PDFs não está disponível. Execute a instalação de dependências do projeto novamente para instalá-lo.');
+  // Sem channel nem executablePath: usa exclusivamente o Chromium da versão
+  // instalada pelo Playwright (ou da imagem oficial correspondente).
+  return chromium.launch({
+    headless: true,
+    timeout: 30000,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
 }
 
 export function createPdfGenerator() {

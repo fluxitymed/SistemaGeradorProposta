@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { resolve, sep, extname } from 'node:path';
 import { templates, productOptions } from './templates/index.js';
 import { validateProposal } from '../public/validation.js';
-import { createPdfGenerator } from './pdf.js';
+import { browserRuntime, createPdfGenerator } from './pdf.js';
 import { listenAvailable } from './startup.js';
 
 const publicRoot = fileURLToPath(new URL('../public/', import.meta.url));
@@ -64,7 +64,18 @@ export function createApp({ generator = createPdfGenerator() } = {}) {
           const result = await generator.generate(templates.get(validation.data.productId), validation.data);
           return json(200, { ...result, pdf: result.pdf.toString('base64') });
         } catch (error) {
-          console.error('Falha no gerador de PDF:', error.message);
+          const cause = error?.cause;
+          console.error('Falha no gerador de PDF:', {
+            name: error?.name || typeof error,
+            message: error?.message || String(error),
+            stack: error?.stack,
+            cause: cause ? {
+              name: cause?.name || typeof cause,
+              message: cause?.message || String(cause),
+              stack: cause?.stack,
+            } : undefined,
+            ...browserRuntime(),
+          });
           return json(error.status || 500, { message: error.status === 429 ? error.message : 'Não foi possível gerar o PDF. Tente novamente. Se o erro continuar, verifique se o navegador está instalado no servidor.' });
         }
       }
