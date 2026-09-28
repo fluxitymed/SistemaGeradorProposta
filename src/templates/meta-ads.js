@@ -53,6 +53,8 @@ export const metaAds = {
     accent: '#002060', heading: '#767171', paper: '#f8f8f8',
     headerAsset: 'fluxity-header.png', footerAsset: 'fluxity-footer.png',
     breakBefore: [], keepWithNext: ['investment'],
+    // Aproveita o espaço útil restante sem separar um título de seu conteúdo.
+    splitAcrossPages: ['supplyLimits', 'serviceStart'],
   },
   reviewNotes: [],
 };

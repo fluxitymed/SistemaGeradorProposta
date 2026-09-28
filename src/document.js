@@ -28,7 +28,7 @@ export async function renderDocument(template, data) {
   ]);
   const e = escapeHtml;
   const l = template.labels;
-  const section = (key, title, body) => `<section data-key="${e(key)}"${template.visual.breakBefore.includes(key) ? ' data-break-before="true"' : ''}${template.visual.keepWithNext?.includes(key) ? ' data-keep-with-next="true"' : ''}><h2>${e(title)}</h2>${body}</section>`;
+  const section = (key, title, body) => `<section data-key="${e(key)}"${template.visual.breakBefore.includes(key) ? ' data-break-before="true"' : ''}${template.visual.keepWithNext?.includes(key) ? ' data-keep-with-next="true"' : ''}${template.visual.splitAcrossPages?.includes(key) ? ' data-split-across-pages="true"' : ''}><h2>${e(title)}</h2>${body}</section>`;
   const list = items => `<ul>${items.map(text => `<li>${e(text)}</li>`).join('')}</ul>`;
   const services = template.serviceGroups
     ? template.serviceGroups.map(group => `<div class="service-group"><h3>${e(group.title)}</h3>${list(group.items)}</div>`).join('')
@@ -89,7 +89,7 @@ export function paginateDocument() {
     section.remove();
     // Grupos de serviços podem aproveitar o espaço restante, mantendo cada
     // subtítulo com sua lista. O caminho do template simples permanece igual.
-    if (!original.querySelector('.service-group')) {
+    if (!original.querySelector('.service-group') && !original.dataset.splitAcrossPages) {
       if (content.children.length) newPage();
       content.append(section);
       if (fits()) continue;
