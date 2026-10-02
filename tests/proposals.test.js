@@ -17,6 +17,7 @@ test('campos obrigatórios e valor positivo', () => {
   assert.equal(Object.keys(validateProposal({}, productOptions()).errors).length, 4);
   for (const price of ['0', '-1', '1000000000', 'NaN']) assert.ok(validateProposal({ ...input, price }, productOptions()).errors.price);
   assert.ok(validateProposal({ ...input, productId: '__proto__' }, productOptions()).errors.productId);
+  assert.ok(validateProposal({ ...input, documentType: 'invoice' }, productOptions()).errors.documentType);
 });
 test('limites explícitos e textos em branco', () => {
   assert.ok(validateProposal({ ...input, clientName: ' ' }, productOptions()).errors.clientName);
@@ -30,6 +31,14 @@ test('nome do arquivo seguro, previsível e limitado', () => {
   assert.match(safeFilename(googleAds, '../../João "<teste>\r\n'), /^Proposta-Google-Ads-Joao-teste.pdf$/);
   assert.equal(safeFilename(googleAds, '中文'), 'Proposta-Google-Ads-Cliente.pdf');
   assert.ok(safeFilename(googleAds, 'a'.repeat(300)).length < 150);
+  assert.equal(safeFilename(googleAds, input.clientName, 'service-order'), 'Ordem-de-Servico-Google-Ads-Dra-Daniela.pdf');
+});
+test('ordem de serviço substitui o título do documento', async () => {
+  const result = validateProposal({ ...input, documentType: 'service-order' }, productOptions());
+  assert.ok(result.valid);
+  const html = await renderDocument(googleAds, result.data);
+  assert.ok(html.includes('ORDEM DE SERVIÇO'));
+  assert.ok(!html.includes('<header><span>PROPOSTA</span>'));
 });
 test('template escapa HTML e preserva as cláusulas comerciais', async () => {
   const html = await renderDocument(googleAds, { clientName: '<script>alert(1)</script>', priceCents: 100000, paymentTerms: '<img src=x onerror=alert(1)>' });

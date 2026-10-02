@@ -2,7 +2,7 @@ import { validateProposal, parsePrice, formatPrice } from './validation.js';
 
 const $ = id => document.getElementById(id);
 const form = $('proposal-form');
-const fields = ['productId', 'clientName', 'price', 'paymentTerms'];
+const fields = ['documentType', 'productId', 'clientName', 'price', 'paymentTerms'];
 let products = [], revision = 0, current = null, busy = false, request, zoomed = false;
 
 function setError(message = '') { $('global-error').textContent = message; $('global-error').hidden = !message; }

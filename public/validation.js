@@ -15,10 +15,12 @@ export const formatPrice = cents => new Intl.NumberFormat('pt-BR', {
 
 export function validateProposal(input, products) {
   const errors = {};
+  const documentType = input?.documentType === undefined ? 'proposal' : input.documentType;
   const productId = typeof input?.productId === 'string' ? input.productId : '';
   const clientName = typeof input?.clientName === 'string' ? input.clientName.trim() : '';
   const paymentTerms = typeof input?.paymentTerms === 'string' ? input.paymentTerms.trim() : '';
   const priceCents = parsePrice(input?.price);
+  if (!['proposal', 'service-order'].includes(documentType)) errors.documentType = 'Selecione um tipo de documento válido.';
   if (!products.some(product => product.id === productId)) errors.productId = 'Selecione um produto válido.';
   if (!clientName) errors.clientName = 'Informe o nome do cliente.';
   else if (clientName.length > limits.clientName) errors.clientName = `Use até ${limits.clientName} caracteres no nome.`;
@@ -29,5 +31,5 @@ export function validateProposal(input, products) {
   for (const [field, text] of Object.entries({ clientName, paymentTerms })) {
     if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(text)) errors[field] = 'Remova os caracteres de controle do texto.';
   }
-  return { errors, valid: Object.keys(errors).length === 0, data: { productId, clientName, priceCents, paymentTerms } };
+  return { errors, valid: Object.keys(errors).length === 0, data: { documentType, productId, clientName, priceCents, paymentTerms } };
 }

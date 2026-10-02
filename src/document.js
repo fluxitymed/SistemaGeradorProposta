@@ -5,10 +5,11 @@ export const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[char]);
 
-export function safeFilename(template, clientName) {
+export function safeFilename(template, clientName, documentType = 'proposal') {
   const slug = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 100).replace(/-$/g, '');
-  return `Proposta-${slug(template.filenameLabel) || 'Produto'}-${slug(clientName) || 'Cliente'}.pdf`;
+  const documentLabel = documentType === 'service-order' ? 'Ordem-de-Servico' : 'Proposta';
+  return `${documentLabel}-${slug(template.filenameLabel) || 'Produto'}-${slug(clientName) || 'Cliente'}.pdf`;
 }
 
 const assetCache = new Map();
@@ -28,16 +29,17 @@ export async function renderDocument(template, data) {
   ]);
   const e = escapeHtml;
   const l = template.labels;
+  const documentTitle = data.documentType === 'service-order' ? 'ORDEM DE SERVIÇO' : l.document;
   const section = (key, title, body) => `<section data-key="${e(key)}"${template.visual.breakBefore.includes(key) ? ' data-break-before="true"' : ''}${template.visual.keepWithNext?.includes(key) ? ' data-keep-with-next="true"' : ''}${template.visual.splitAcrossPages?.includes(key) ? ' data-split-across-pages="true"' : ''}><h2>${e(title)}</h2>${body}</section>`;
   const list = items => `<ul>${items.map(text => `<li>${e(text)}</li>`).join('')}</ul>`;
   const services = template.serviceGroups
     ? template.serviceGroups.map(group => `<div class="service-group"><h3>${e(group.title)}</h3>${list(group.items)}</div>`).join('')
     : list(template.includedServices);
-  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${e(l.document)} — ${e(data.clientName)}</title>
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${e(documentTitle)} — ${e(data.clientName)}</title>
   <style>@font-face{font-family:Poppins;src:url('${regular}')}@font-face{font-family:Poppins;src:url('${bold}');font-weight:700}
   :root{--accent:${template.visual.accent};--heading:${template.visual.heading};--paper:${template.visual.paper}}${css}</style></head><body>
-  <template id="sheet-template"><article class="sheet" aria-label="Página da proposta">
-  <header><span>${e(l.document)}</span><div class="brand-symbol"><img src="${logo}" alt="${e(template.company.name)}"></div></header>
+  <template id="sheet-template"><article class="sheet" aria-label="${e(documentTitle)}">
+  <header><span>${e(documentTitle)}</span><div class="brand-symbol"><img src="${logo}" alt="${e(template.company.name)}"></div></header>
   <div class="content"></div><footer><strong>${e(template.company.website)}</strong><img src="${footer}" alt="${e(template.company.name)}"></footer></article></template>
   <main id="pages"></main><div id="source">
   ${section('client', template.category, `<p class="client-name">${e(data.clientName)}</p><p class="reference"><strong>${e(l.reference)}:</strong> ${e(template.reference)}</p>`)}

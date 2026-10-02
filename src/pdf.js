@@ -43,7 +43,7 @@ export function createPdfGenerator() {
         const html = await page.content();
         // Chromium imprime HTML/CSS com texto selecionável, sem screenshots.
         const pdf = await page.pdf({ format: 'A4', preferCSSPageSize: true, printBackground: true, tagged: true, timeout: 30000 });
-        return { html, pdf, filename: safeFilename(template, data.clientName), ...layout };
+        return { html, pdf, filename: safeFilename(template, data.clientName, data.documentType), ...layout };
       } finally {
         try { await context?.close(); } finally { active--; }
       }
