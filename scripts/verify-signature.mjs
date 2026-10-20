@@ -24,7 +24,7 @@ try {
       assert.equal(check.filter(p => p.signature).length, 1);
       const text = check.map(p => p.text).join('\n');
       assert.ok(text.indexOf('Condições de pagamento') < text.indexOf('ACEITE DA PROPOSTA'));
-      assert.ok(text.includes('Assinatura do cliente ou responsável\nClínica Fluxity Saúde'));
+      assert.match(text, /Assinatura do cliente ou responsável\s+Data:/);
       assert.ok(text.includes('Data: ______ / ______ / __________'));
       assert.ok(text.includes(paymentTerms));
       if (template.id === 'trafego-pago-atendimento') {
