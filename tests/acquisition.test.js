@@ -4,6 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { googleAds } from '../src/templates/google-ads.js';
 import { gestaoAquisicaoComercial as template } from '../src/templates/gestao-aquisicao-comercial.js';
 import { metaAds } from '../src/templates/meta-ads.js';
+import { trafegoPagoAtendimento as base } from '../src/templates/trafego-pago-atendimento.js';
+import { trafegoPagoAtendimentoCrm as crm } from '../src/templates/trafego-pago-atendimento-crm.js';
 import { fluxity } from '../src/config/fluxity.js';
 import { productOptions } from '../src/templates/index.js';
 import { renderDocument, safeFilename } from '../src/document.js';
@@ -15,13 +17,24 @@ test('Google Ads conserva integralmente a configuração anterior', async () => 
   assert.equal(googleAds.company, fluxity);
   assert.equal(template.company, fluxity);
 });
-test('catálogo possui os três produtos com os mesmos campos variáveis', () => {
-  assert.deepEqual(productOptions().map(item => item.id), ['google-ads', 'gestao-aquisicao-comercial', 'meta-ads', 'trafego-pago-atendimento']);
+test('catálogo possui os produtos com os mesmos campos variáveis', () => {
+  assert.deepEqual(productOptions().map(item => item.id), ['google-ads', 'gestao-aquisicao-comercial', 'meta-ads', 'trafego-pago-atendimento', 'trafego-pago-atendimento-crm']);
   assert.deepEqual(template.variableFields, googleAds.variableFields);
   assert.deepEqual(metaAds.variableFields, googleAds.variableFields);
   assert.deepEqual(template.serviceGroups.map(group => group.items.length), [5, 6, 7, 2]);
   assert.equal(template.supplyLimits.length, 10);
   for (const text of [...template.serviceGroups.flatMap(group => group.items), ...template.supplyLimits]) assert.match(text, /[.;]$/);
+});
+test('CRM reutiliza o escopo anterior e acrescenta os itens contratados', () => {
+  assert.deepEqual(crm.variableFields, base.variableFields);
+  assert.deepEqual(crm.serviceGroups.slice(0, 3), base.serviceGroups);
+  assert.ok(crm.serviceGroups.slice(0, 3).every((group, i) => group === base.serviceGroups[i]));
+  assert.deepEqual(crm.supplyLimits.slice(0, base.supplyLimits.length), base.supplyLimits);
+  assert.deepEqual(crm.observations.slice(0, base.observations.length), base.observations);
+  assert.equal(crm.serviceGroups[3].items.length, 13);
+  assert.equal(crm.supplyLimits.length, base.supplyLimits.length + 6);
+  assert.equal(crm.observations.length, base.observations.length + 3);
+  assert.equal(safeFilename(crm, 'Clínica Fluxity Saúde'), 'Proposta-Trafego-Pago-Atendimento-CRM-Clinica-Fluxity-Saude.pdf');
 });
 test('Meta Ads contém apenas o escopo, limites e observações contratados', async () => {
   const input = { productId: metaAds.id, clientName: 'Clínica Fluxity Saúde', price: '1.500,00', paymentTerms: 'Pagamento antecipado no início dos serviços.\nMensalidades seguintes com vencimento a cada 30 dias.' };

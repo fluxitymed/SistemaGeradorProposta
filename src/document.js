@@ -49,7 +49,7 @@ export async function renderDocument(template, data) {
   ${section('serviceStart', l.serviceStart, `<p>${e(template.serviceStart)}</p>`)}
   ${section('investment', l.investment, `<table><thead><tr><th>${e(l.description)}</th><th>${e(l.price)}</th></tr></thead><tbody><tr><td>${e(template.investmentDescription)}</td><td class="price">${e(formatPrice(data.priceCents))}</td></tr></tbody></table><p class="observations">${e(l.observations)}<br>${template.observations.map(text => `-${e(text)}`).join('<br>')}</p>`)}
   ${section('paymentTerms', l.paymentTerms, `<p class="payment-terms">${e(data.paymentTerms)}</p>${template.latePaymentRule ? `<p>${e(template.latePaymentRule)}</p>` : ''}`)}
-  ${section('signature', 'ACEITE DA PROPOSTA', `<div class="signature"><p class="signature-declaration">Declaro estar de acordo com os serviços, limites de fornecimento, investimento e condições de pagamento apresentados nesta proposta.</p><div class="signature-line"></div><p>Assinatura do cliente ou responsável</p><p>Data: ______ / ______ / __________</p></div>`)}
+  ${section('signature', 'ACEITE DA PROPOSTA', `<div class="signature"><p class="signature-declaration">Declaro estar de acordo com os serviços, limites de fornecimento, investimento e condições de pagamento apresentados nesta proposta.</p><div class="signature-line"></div><p>Assinatura do cliente ou responsável${template.signatureClientName ? `<br>${e(data.clientName)}` : ''}</p><p>Data: ______ / ______ / __________</p></div>`)}
   </div></body></html>`;
 }
 
