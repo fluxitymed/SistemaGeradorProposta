@@ -18,7 +18,7 @@ test('Google Ads conserva integralmente a configuração anterior', async () => 
   assert.equal(template.company, fluxity);
 });
 test('catálogo possui os produtos com os mesmos campos variáveis', () => {
-  assert.deepEqual(productOptions().map(item => item.id), ['google-ads', 'gestao-aquisicao-comercial', 'meta-ads', 'trafego-pago-atendimento', 'trafego-pago-atendimento-crm']);
+  assert.deepEqual(productOptions().map(item => item.id), ['google-ads', 'gestao-aquisicao-comercial', 'meta-ads', 'trafego-pago-atendimento', 'trafego-pago-atendimento-crm-gestao-comercial']);
   assert.deepEqual(template.variableFields, googleAds.variableFields);
   assert.deepEqual(metaAds.variableFields, googleAds.variableFields);
   assert.deepEqual(template.serviceGroups.map(group => group.items.length), [5, 6, 7, 2]);
@@ -32,9 +32,10 @@ test('CRM reutiliza o escopo anterior e acrescenta os itens contratados', () => 
   assert.deepEqual(crm.supplyLimits.slice(0, base.supplyLimits.length), base.supplyLimits);
   assert.deepEqual(crm.observations.slice(0, base.observations.length), base.observations);
   assert.equal(crm.serviceGroups[3].items.length, 13);
-  assert.equal(crm.supplyLimits.length, base.supplyLimits.length + 6);
-  assert.equal(crm.observations.length, base.observations.length + 3);
-  assert.equal(safeFilename(crm, 'Clínica Fluxity Saúde'), 'Proposta-Trafego-Pago-Atendimento-CRM-Clinica-Fluxity-Saude.pdf');
+  assert.equal(crm.serviceGroups[4].title, 'Gestão Comercial');
+  assert.equal(crm.supplyLimits.length, base.supplyLimits.length + 14);
+  assert.equal(crm.observations.length, base.observations.length + 6);
+  assert.equal(safeFilename(crm, 'Clínica Fluxity Saúde'), 'Proposta-Trafego-Atendimento-CRM-Gestao-Comercial-Clinica-Fluxity-Saude.pdf');
 });
 test('Meta Ads contém apenas o escopo, limites e observações contratados', async () => {
   const input = { productId: metaAds.id, clientName: 'Clínica Fluxity Saúde', price: '1.500,00', paymentTerms: 'Pagamento antecipado no início dos serviços.\nMensalidades seguintes com vencimento a cada 30 dias.' };
