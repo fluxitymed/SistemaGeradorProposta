@@ -30,3 +30,5 @@ footer img { width: 18mm; height: auto; }
 .service-group { font-size: 10pt; line-height: 1.2; margin-bottom: 4mm; break-inside: avoid; }
 .service-group:last-child { margin-bottom: 0; }
 .service-group h3 { font: 700 10pt/1.4 Poppins, Arial, sans-serif; margin: 0 0 1mm; break-after: avoid; }
+.signature-line { width: 90mm; max-width: 100%; border-bottom: 0.2mm solid #555; margin: 18mm 0 2mm; }
+.signature p { font-size: 10pt; }

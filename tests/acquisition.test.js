@@ -1,4 +1,4 @@
-import test from 'node:test';
+﻿import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { googleAds } from '../src/templates/google-ads.js';
@@ -16,7 +16,7 @@ test('Google Ads conserva integralmente a configuração anterior', async () => 
   assert.equal(template.company, fluxity);
 });
 test('catálogo possui os três produtos com os mesmos campos variáveis', () => {
-  assert.deepEqual(productOptions().map(item => item.id), ['google-ads', 'gestao-aquisicao-comercial', 'meta-ads']);
+  assert.deepEqual(productOptions().map(item => item.id), ['google-ads', 'gestao-aquisicao-comercial', 'meta-ads', 'trafego-pago-atendimento']);
   assert.deepEqual(template.variableFields, googleAds.variableFields);
   assert.deepEqual(metaAds.variableFields, googleAds.variableFields);
   assert.deepEqual(template.serviceGroups.map(group => group.items.length), [5, 6, 7, 2]);
@@ -53,3 +53,4 @@ test('novo template escapa nome e pagamento com várias linhas', async () => {
   assert.ok(!html.includes('<img src=x'));
   assert.ok(html.includes('Linha 1\n&lt;img src=x onerror=alert(1)&gt;'));
 });
+

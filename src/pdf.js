@@ -22,18 +22,15 @@ export async function launchBrowser() {
 }
 
 export function createPdfGenerator() {
-  let browserPromise;
   let active = 0;
   return {
     async generate(template, data) {
       if (active >= 2) throw Object.assign(new Error('Há propostas sendo geradas. Tente novamente em alguns segundos.'), { status: 429 });
       active++;
       let context;
+      let browser;
       try {
-        if (!browserPromise) browserPromise = launchBrowser().then(browser => {
-          browser.on('disconnected', () => { browserPromise = undefined; }); return browser;
-        }).catch(error => { browserPromise = undefined; throw error; });
-        const browser = await browserPromise;
+        browser = await launchBrowser();
         context = await browser.newContext({ viewport: { width: 794, height: 1123 }, offline: true });
         const page = await context.newPage();
         page.setDefaultTimeout(30000);
@@ -45,9 +42,11 @@ export function createPdfGenerator() {
         const pdf = await page.pdf({ format: 'A4', preferCSSPageSize: true, printBackground: true, tagged: true, timeout: 30000 });
         return { html, pdf, filename: safeFilename(template, data.clientName, data.documentType), ...layout };
       } finally {
-        try { await context?.close(); } finally { active--; }
+        try { await context?.close(); } finally {
+          try { await browser?.close(); } finally { active--; }
+        }
       }
     },
-    async close() { if (browserPromise) await (await browserPromise).close(); },
+    async close() {},
   };
 }
