@@ -27,9 +27,10 @@ test('catálogo possui os produtos com os mesmos campos variáveis', () => {
   for (const text of [...template.serviceGroups.flatMap(group => group.items), ...template.supplyLimits]) assert.match(text, /[.;]$/);
 });
 test('Equipe Completa compõe os serviços anteriores e acrescenta conteúdo e social selling', () => {
-  assert.deepEqual([...equipeCompleta.serviceGroups.slice(0, 2), ...equipeCompleta.serviceGroups.slice(6)], crm.serviceGroups);
+  assert.deepEqual([...equipeCompleta.serviceGroups.slice(0, 2), ...equipeCompleta.serviceGroups.slice(4)], crm.serviceGroups);
   assert.equal(equipeCompleta.serviceGroups[2].title, 'Social Selling no Instagram');
-  assert.deepEqual(equipeCompleta.serviceGroups.slice(3, 6).map(group => group.title), ['Planejamento de Conteúdo', 'Direção de Gravação', 'Edição de Reels']);
+  assert.equal(equipeCompleta.serviceGroups[3].title, 'Planejamento, gravação e edição de conteúdo');
+  assert.deepEqual(equipeCompleta.serviceGroups[3].sections.map(group => group.title), ['Planejamento de Conteúdo', 'Direção de Gravação', 'Edição de Reels']);
   assert.deepEqual(equipeCompleta.supplyLimits.slice(0, crm.supplyLimits.length), crm.supplyLimits);
   assert.deepEqual(equipeCompleta.observations.slice(0, crm.observations.length), crm.observations);
   assert.equal(safeFilename(equipeCompleta, 'Clínica Fluxity Saúde'), 'Proposta-Equipe-Completa-Clinica-Fluxity-Saude.pdf');

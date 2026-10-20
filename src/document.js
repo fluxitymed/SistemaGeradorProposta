@@ -33,7 +33,9 @@ export async function renderDocument(template, data) {
   const section = (key, title, body) => `<section data-key="${e(key)}"${template.visual.breakBefore.includes(key) ? ' data-break-before="true"' : ''}${template.visual.keepWithNext?.includes(key) ? ' data-keep-with-next="true"' : ''}${template.visual.splitAcrossPages?.includes(key) ? ' data-split-across-pages="true"' : ''}><h2>${e(title)}</h2>${body}</section>`;
   const list = items => `<ul>${items.map(text => `<li>${e(text)}</li>`).join('')}</ul>`;
   const services = template.serviceGroups
-    ? template.serviceGroups.map(group => `<div class="service-group"><h3>${e(group.title)}</h3>${list(group.items)}</div>`).join('')
+    ? template.serviceGroups.map(group => group.sections
+      ? group.sections.map((part, index) => `<div class="service-group service-subgroup">${index === 0 ? `<h3>${e(group.title)}</h3>` : ''}<h4>${e(part.title)}</h4>${list(part.items)}</div>`).join('')
+      : `<div class="service-group"><h3>${e(group.title)}</h3>${list(group.items)}</div>`).join('')
     : list(template.includedServices);
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${e(documentTitle)} — ${e(data.clientName)}</title>
   <style>@font-face{font-family:Poppins;src:url('${regular}')}@font-face{font-family:Poppins;src:url('${bold}');font-weight:700}

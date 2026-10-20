@@ -5,7 +5,7 @@ export const equipeCompleta = {
   ...base,
   id: 'equipe-completa', name: 'Equipe Completa', filenameLabel: 'Equipe-Completa',
   category: 'Aquisição, conteúdo e operação comercial', reference: 'Equipe Completa de Aquisição e Conversão',
-  serviceGroups: [...base.serviceGroups.slice(0, 2), socialSelling, ...producaoConteudo, ...base.serviceGroups.slice(2)],
+  serviceGroups: [...base.serviceGroups.slice(0, 2), socialSelling, producaoConteudo, ...base.serviceGroups.slice(2)],
   supplyLimits: [...base.supplyLimits,
     'O cliente deverá fornecer e manter os acessos necessários ao Instagram;',
     'A operação respeitará os limites e as políticas da plataforma;',

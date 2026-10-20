@@ -18,7 +18,7 @@
     'Operação de relacionamento e desenvolvimento de oportunidades, sem promessa de volume fixo de contatos ou vendas, respeitando as políticas do Instagram e sem abordagens invasivas ou disparos indiscriminados.',
   ],
 };
-export const producaoConteudo = [
+export const producaoConteudo = { title: 'Planejamento, gravação e edição de conteúdo', sections: [
   { title: 'Planejamento de Conteúdo', items: [
     'Definição dos temas dos conteúdos conforme os objetivos da clínica;',
     'Planejamento de pautas para os vídeos;',
@@ -51,4 +51,4 @@ export const producaoConteudo = [
     'Otimização dos vídeos para publicação nas redes sociais;',
     'Entrega dos arquivos finais para aprovação e publicação.',
   ] },
-];
+] };
