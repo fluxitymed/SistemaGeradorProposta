@@ -39,7 +39,7 @@ try {
         for (const value of ['Landing Page', 'inteligência artificial']) assert.ok(!text.toLowerCase().includes(value.toLowerCase()), value);
       }
       if (isEquipe) {
-        for (const value of ['Google Ads', 'Meta Ads', 'Social Selling no Instagram', 'Planejamento de Conteúdo', 'Direção de Gravação', 'Edição de Reels', 'Atendimento Comercial dos Leads', 'CRM e Gestão dos Contatos', 'Gestor Comercial', '4 Reels por mês', 'Realização de cortes', 'Aplicação de legendas', 'Ajustes de cor, iluminação e som', '8.500,00']) assert.ok(text.includes(value), value);
+        for (const value of ['Google Ads', 'Meta Ads', 'Social Selling no Instagram', 'Produção Audiovisual', 'Direção de gravação', 'Atendimento Comercial dos Leads', 'CRM e Gestão dos Contatos', 'Gestor Comercial', '4 Reels por mês', 'cortes', 'legendas', 'cor, iluminação e som', '8.500,00']) assert.ok(text.includes(value), value);
         for (const value of ['Landing Page', 'inteligência artificial']) assert.ok(!text.toLowerCase().includes(value.toLowerCase()), value);
       }
       console.log(`${result.filename}: ${result.pageCount} páginas; assinatura na página ${check.findIndex(p => p.signature) + 1}`);
