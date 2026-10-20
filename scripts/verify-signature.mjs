@@ -11,8 +11,9 @@ const paymentTerms = 'Pagamento antecipado no início dos serviços.\nMensalidad
 try {
   for (const template of templates.values()) {
     const isCrm = template.id === 'trafego-pago-atendimento-crm-gestao-comercial';
+    const isEquipe = template.id === 'equipe-completa';
     const terms = isCrm ? 'Pagamento antecipado no início dos serviços. Contrato inicial de 3 meses.' : paymentTerms;
-    const result = await generator.generate(template, { clientName: 'Clínica Fluxity Saúde', priceCents: isCrm ? 550000 : 450000, paymentTerms: terms });
+    const result = await generator.generate(template, { clientName: 'Clínica Fluxity Saúde', priceCents: isEquipe ? 850000 : isCrm ? 550000 : 450000, paymentTerms: terms });
     await writeFile(`${dir}/${result.filename}`, result.pdf);
     const browser = await chromium.launch({ headless: true });
     try {
@@ -26,7 +27,7 @@ try {
       assert.equal(check.filter(p => p.signature).length, 1);
       const text = check.map(p => p.text).join('\n');
       assert.ok(text.indexOf('Condições de pagamento') < text.indexOf('ACEITE DA PROPOSTA'));
-      assert.match(text, isCrm ? /Assinatura do cliente ou responsável\s+Clínica Fluxity Saúde\s+Data:/ : /Assinatura do cliente ou responsável\s+Data:/);
+      assert.match(text, isCrm || isEquipe ? /Assinatura do cliente ou responsável\s+Clínica Fluxity Saúde\s+Data:/ : /Assinatura do cliente ou responsável\s+Data:/);
       assert.ok(text.includes('Data: ______ / ______ / __________'));
       assert.ok(text.includes(terms));
       if (template.id === 'trafego-pago-atendimento') {
@@ -35,6 +36,10 @@ try {
       }
       if (isCrm) {
         for (const value of ['Google Ads', 'Meta Ads', 'Atendimento Comercial dos Leads', 'CRM e Gestão dos Contatos', 'Gestor Comercial', '5.500,00', 'Indicadores acompanhados', 'Não existe garantia de volume de vendas ou faturamento', 'gestão exclusiva da equipe']) assert.ok(text.includes(value), value);
+        for (const value of ['Landing Page', 'inteligência artificial']) assert.ok(!text.toLowerCase().includes(value.toLowerCase()), value);
+      }
+      if (isEquipe) {
+        for (const value of ['Google Ads', 'Meta Ads', 'Social Selling no Instagram', 'Planejamento de Conteúdo', 'Direção de Gravação', 'Edição de Reels', 'Atendimento Comercial dos Leads', 'CRM e Gestão dos Contatos', 'Gestor Comercial', '4 Reels por mês', 'Realização de cortes', 'Aplicação de legendas', 'Ajustes de cor, iluminação e som', '8.500,00']) assert.ok(text.includes(value), value);
         for (const value of ['Landing Page', 'inteligência artificial']) assert.ok(!text.toLowerCase().includes(value.toLowerCase()), value);
       }
       console.log(`${result.filename}: ${result.pageCount} páginas; assinatura na página ${check.findIndex(p => p.signature) + 1}`);

@@ -6,6 +6,7 @@ import { gestaoAquisicaoComercial as template } from '../src/templates/gestao-aq
 import { metaAds } from '../src/templates/meta-ads.js';
 import { trafegoPagoAtendimento as base } from '../src/templates/trafego-pago-atendimento.js';
 import { trafegoPagoAtendimentoCrm as crm } from '../src/templates/trafego-pago-atendimento-crm.js';
+import { equipeCompleta } from '../src/templates/equipe-completa.js';
 import { fluxity } from '../src/config/fluxity.js';
 import { productOptions } from '../src/templates/index.js';
 import { renderDocument, safeFilename } from '../src/document.js';
@@ -18,12 +19,20 @@ test('Google Ads conserva integralmente a configuração anterior', async () => 
   assert.equal(template.company, fluxity);
 });
 test('catálogo possui os produtos com os mesmos campos variáveis', () => {
-  assert.deepEqual(productOptions().map(item => item.id), ['google-ads', 'gestao-aquisicao-comercial', 'meta-ads', 'trafego-pago-atendimento', 'trafego-pago-atendimento-crm-gestao-comercial']);
+  assert.deepEqual(productOptions().map(item => item.id), ['google-ads', 'gestao-aquisicao-comercial', 'meta-ads', 'trafego-pago-atendimento', 'trafego-pago-atendimento-crm-gestao-comercial', 'equipe-completa']);
   assert.deepEqual(template.variableFields, googleAds.variableFields);
   assert.deepEqual(metaAds.variableFields, googleAds.variableFields);
   assert.deepEqual(template.serviceGroups.map(group => group.items.length), [5, 6, 7, 2]);
   assert.equal(template.supplyLimits.length, 10);
   for (const text of [...template.serviceGroups.flatMap(group => group.items), ...template.supplyLimits]) assert.match(text, /[.;]$/);
+});
+test('Equipe Completa compõe os serviços anteriores e acrescenta conteúdo e social selling', () => {
+  assert.deepEqual([...equipeCompleta.serviceGroups.slice(0, 2), ...equipeCompleta.serviceGroups.slice(6)], crm.serviceGroups);
+  assert.equal(equipeCompleta.serviceGroups[2].title, 'Social Selling no Instagram');
+  assert.deepEqual(equipeCompleta.serviceGroups.slice(3, 6).map(group => group.title), ['Planejamento de Conteúdo', 'Direção de Gravação', 'Edição de Reels']);
+  assert.deepEqual(equipeCompleta.supplyLimits.slice(0, crm.supplyLimits.length), crm.supplyLimits);
+  assert.deepEqual(equipeCompleta.observations.slice(0, crm.observations.length), crm.observations);
+  assert.equal(safeFilename(equipeCompleta, 'Clínica Fluxity Saúde'), 'Proposta-Equipe-Completa-Clinica-Fluxity-Saude.pdf');
 });
 test('CRM reutiliza o escopo anterior e acrescenta os itens contratados', () => {
   assert.deepEqual(crm.variableFields, base.variableFields);
