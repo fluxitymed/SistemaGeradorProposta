@@ -34,7 +34,7 @@ try {
         for (const value of ['Landing Page', 'inteligência artificial', 'palavras-chave junto ao cliente para alinhamento']) assert.ok(!text.includes(value), value);
       }
       if (isCrm) {
-        for (const value of ['Google Ads', 'Meta Ads', 'Atendimento Comercial dos Leads', 'CRM e Gestão dos Contatos', 'Gestão Comercial', '5.500,00', 'Indicadores acompanhados', 'Não existe garantia de volume de vendas ou faturamento', 'gestão exclusiva da equipe']) assert.ok(text.includes(value), value);
+        for (const value of ['Google Ads', 'Meta Ads', 'Atendimento Comercial dos Leads', 'CRM e Gestão dos Contatos', 'Gestor Comercial', '5.500,00', 'Indicadores acompanhados', 'Não existe garantia de volume de vendas ou faturamento', 'gestão exclusiva da equipe']) assert.ok(text.includes(value), value);
         for (const value of ['Landing Page', 'inteligência artificial']) assert.ok(!text.toLowerCase().includes(value.toLowerCase()), value);
       }
       console.log(`${result.filename}: ${result.pageCount} páginas; assinatura na página ${check.findIndex(p => p.signature) + 1}`);

@@ -32,7 +32,7 @@ test('CRM reutiliza o escopo anterior e acrescenta os itens contratados', () => 
   assert.deepEqual(crm.supplyLimits.slice(0, base.supplyLimits.length), base.supplyLimits);
   assert.deepEqual(crm.observations.slice(0, base.observations.length), base.observations);
   assert.equal(crm.serviceGroups[3].items.length, 13);
-  assert.equal(crm.serviceGroups[4].title, 'Gestão Comercial');
+  assert.equal(crm.serviceGroups[4].title, 'Gestor Comercial');
   assert.equal(crm.supplyLimits.length, base.supplyLimits.length + 14);
   assert.equal(crm.observations.length, base.observations.length + 6);
   assert.equal(safeFilename(crm, 'Clínica Fluxity Saúde'), 'Proposta-Trafego-Atendimento-CRM-Gestao-Comercial-Clinica-Fluxity-Saude.pdf');
